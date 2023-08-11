@@ -16,6 +16,7 @@ permissions:
 jobs:
   Terraform-Deploy:
     runs-on: ubuntu-latest
+    # when an env is set the context  for iam trust policy will be "repo:<User_Org>/<Repo_Name>:environment:<Env_Name>"
     environment: demo
     steps:
       - name: Git clone the repository
@@ -27,7 +28,23 @@ jobs:
           role-session-name: Platform_Portal_Terraform_GitHub
           aws-region: ${{ env.AWS_REGION }}
           role-skip-session-tagging: true
-      # Hello from AWS: WhoAmI
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+            # Run TF
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.4
+      # Run TF Init
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+      # Just a demo so apply
+      - name: Terraform Apply
+        id: plan
+        run: terraform apply --auto-apply
+        continue-on-error: true
