@@ -1,8 +1,8 @@
 
-resource "aws_vpc" "plat-001" {
-  cidr_block = "172.16.0.0/16"
+resource "aws_vpc" "sandbox002-001" {
+  cidr_block = "10.0.2.0/24"
   tags = {
-    Name = "plat-001"
+    Name = "sandbox002-001"
   }
 }
     
